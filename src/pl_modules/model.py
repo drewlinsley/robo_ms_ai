@@ -95,7 +95,8 @@ class MyModel(pl.LightningModule):
 
     def validation_step(self, batch: Any, batch_idx: int) -> Dict[str, torch.Tensor]:
         x, y = batch
-        out = self.step(x, y)
+        with torch.no_grad():
+            out = self.step(x, y)
 
         return out
     
@@ -120,7 +121,8 @@ class MyModel(pl.LightningModule):
 
     def test_step(self, batch: Any, batch_idx: int) -> Dict[str, torch.Tensor]:
         x, y = batch
-        out = self.step(x, y)
+        with torch.no_grad():
+            out = self.step(x, y)
         return out
 
     def test_step_end(self, out):
