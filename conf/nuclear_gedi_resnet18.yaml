@@ -18,15 +18,15 @@ data:
         train:
           _target_: src.pl_data.dataset.NuclearGedi
           train: True
-          path: "../dropbox_symlink/GEDInls/"
+          path: "/home/drew/robo_ms_ai/dropbox_symlink/GEDInls/"
         val:
           _target_: src.pl_data.dataset.NuclearGedi
           train: False
-          path: "../dropbox_symlink/GEDInls/"
+          path: "/home/drew/robo_ms_ai/dropbox_symlink/GEDInls/"
         test:
           _target_: src.pl_data.dataset.NuclearGedi
           train: False
-          path: "../dropbox_symlink/GEDInls/"
+          path: "/home/drew/robo_ms_ai/dropbox_symlink/GEDInls/"
     num_workers:
       train: 4
       val: 4
