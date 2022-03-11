@@ -125,12 +125,12 @@ class NuclearGedi(Dataset):
         self.denom = self.maxval - self.minval
 
         # List all the files
-        import pdb;pdb.set_trace()
         print("Globbing files for NuclearGedi, this may take a while...")
         live = glob(os.path.join(self.path, "GC150nls-Live", "*.tif"))
         dead = glob(os.path.join(self.path, "GC150nls-Dead", "*.tif"))
-        if not len(live) or len(dead):
+        if not len(live) or not len(dead):
             raise RuntimeError("No files found at {}".format(self.path))
+        import pdb;pdb.set_trace()
         files = np.asarray(live + dead)
         labels = np.concatenate((np.ones_like(live), np.zeros_like(dead)), 0)
         np.random.seed(42)
