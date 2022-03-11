@@ -130,7 +130,6 @@ class NuclearGedi(Dataset):
         dead = glob(os.path.join(self.path, "GC150nls-Dead", "*.tif"))
         if not len(live) or not len(dead):
             raise RuntimeError("No files found at {}".format(self.path))
-        import pdb;pdb.set_trace()
         files = np.asarray(live + dead)
         labels = np.concatenate((np.ones_like(live), np.zeros_like(dead)), 0)
         np.random.seed(42)

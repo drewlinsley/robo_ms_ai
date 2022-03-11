@@ -60,6 +60,7 @@ class MyModel(pl.LightningModule):
             loss = self.loss(z1, z2)
         else:
             logits = self(x)
+            import pdb;pdb.set_trace()
             loss = self.loss(self.final_nl(logits, dim=-1), y)
         return {"logits": logits, "loss": loss, "y": y, "x": x}
 
