@@ -131,7 +131,7 @@ class NuclearGedi(Dataset):
         if not len(live) or not len(dead):
             raise RuntimeError("No files found at {}".format(self.path))
         files = np.asarray(live + dead)
-        labels = np.concatenate((np.ones(len(live)), np.zeros(len(dead))), 0).astype(int)
+        labels = np.concatenate((np.ones(len(live)), np.zeros(len(dead))), 0).astype(int).reshape(-1, 1)
         np.random.seed(42)
         idx = np.random.permutation(len(files))
         files = files[idx]  # Shuffle
