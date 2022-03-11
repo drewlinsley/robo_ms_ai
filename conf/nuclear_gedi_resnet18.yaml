@@ -75,8 +75,8 @@ model:
   _target_: src.pl_modules.model.MyModel
   name: resnet18
   num_classes: 1
-  final_nl: log_softmax
-  loss: nll_loss
+  final_nl: sigmoid
+  loss: BCEloss
 
 optim:
   optimizer:
