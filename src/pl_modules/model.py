@@ -78,7 +78,11 @@ class MyModel(pl.LightningModule):
         return out
 
     def training_step_end(self, out):
-        self.train_accuracy(self.final_nl(out["logits"], dim=-1), out["y"])
+        if self.final_nl_dim < 0:
+            act = self.final_nl(out["logits"])
+        else:
+            act = self.final_nl(out["logits"], dim=-1)
+        self.train_accuracy(act, out["y"])
         self.log_dict(
             {
                 "train_acc": self.train_accuracy,
@@ -96,7 +100,11 @@ class MyModel(pl.LightningModule):
         return out
     
     def validation_step_end(self, out):
-        self.val_accuracy(self.final_nl(out["logits"], dim=-1), out["y"])
+        if self.final_nl_dim < 0:
+            act = self.final_nl(out["logits"])
+        else:
+            act = self.final_nl(out["logits"], dim=-1)
+        self.val_accuracy(act, out["y"])
         self.log_dict(
             {
                 "val_acc": self.val_accuracy,
@@ -116,7 +124,11 @@ class MyModel(pl.LightningModule):
         return out
 
     def test_step_end(self, out):
-        self.test_accuracy(self.final_nl(out["logits"], dim=-1), out["y"])
+        if self.final_nl_dim < 0:
+            act = self.final_nl(out["logits"])
+        else:
+            act = self.final_nl(out["logits"], dim=-1)
+        self.test_accuracy(act, out["y"])
         self.log_dict(
             {
                 "test_acc": self.test_accuracy,
