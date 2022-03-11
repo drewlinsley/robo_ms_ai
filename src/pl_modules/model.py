@@ -25,7 +25,7 @@ from pl_bolts.optimizers.lr_scheduler import linear_warmup_decay
 
 
 class MyModel(pl.LightningModule):
-    def __init__(self, cfg: DictConfig, name, num_classes, final_nl, loss, self_supervised=False, *args, **kwargs) -> None:
+    def __init__(self, cfg: DictConfig, name, num_classes, final_nl, loss, final_nl_dim, self_supervised=False, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.cfg = cfg
         self.save_hyperparameters(cfg)
@@ -34,6 +34,8 @@ class MyModel(pl.LightningModule):
         # self.automatic_optimization = False
         self.num_classes = num_classes
         self.loss = getattr(losses, loss)  # Add this to the config
+        self.final_nl_dim = final_nl_dim
+
         if final_nl:
             self.final_nl = getattr(F, final_nl)
         else:
@@ -61,7 +63,10 @@ class MyModel(pl.LightningModule):
         else:
             logits = self(x)
             import pdb;pdb.set_trace()
-            loss = self.loss(self.final_nl(logits, dim=-1), y)
+            if self.final_nl_dim < 0:
+                loss = self.loss(self.final_nl(logits), y)
+            else:
+                loss = self.loss(self.final_nl(logits, dim=-1), y)
         return {"logits": logits, "loss": loss, "y": y, "x": x}
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
