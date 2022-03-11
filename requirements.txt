@@ -1,3 +1,4 @@
+joblib
 pytorch-lightning
 lightning-bolts
 torchmetrics>=0.3
