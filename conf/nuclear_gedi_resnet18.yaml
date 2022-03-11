@@ -76,7 +76,7 @@ model:
   name: resnet18
   num_classes: 1
   final_nl: sigmoid
-  loss: BCEloss
+  loss: bce_loss
 
 optim:
   optimizer:
