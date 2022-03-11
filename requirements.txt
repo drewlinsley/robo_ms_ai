@@ -1,0 +1,14 @@
+pytorch-lightning
+lightning-bolts
+torchmetrics>=0.3
+torchvision
+hydra-core
+wandb
+dvc
+python-dotenv
+matplotlib
+captum
+glob2
+scikit-image
+imagecodecs
+tifffile

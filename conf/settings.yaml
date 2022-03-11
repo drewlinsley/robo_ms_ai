@@ -1,0 +1,5 @@
+# @package _global_
+logging:
+  wandb:
+    project: genentech
+    entity: drewlinsley
