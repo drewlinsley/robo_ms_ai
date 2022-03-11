@@ -111,6 +111,49 @@ class COR14(Dataset):
         return f"MyDataset({self.name}, {self.path})"
 
 
+class NuclearGedi(Dataset):
+    def __init__(
+        self, path: ValueNode, train: bool, cfg: DictConfig, transform, **kwargs
+    ):
+        super().__init__()
+        self.cfg = cfg
+        self.path = path
+        self.train = train
+        self.transform = transform
+        self.maxval = 33000
+        self.minval = 0
+        self.denom = self.maxval - self.minval
+
+        # List all the files
+        print("Globbing files for COR14, this may take a while...")
+        live = glob(os.path.join(self.path, "GC150nls-Live", "*.tif"))
+        dead = glob(os.path.join(self.path, "GC150nls-Dead", "*.tif"))
+        files = np.asarray(live + dead)
+        labels = np.concatenate((np.ones_like(live), np.zeros_like(dead)), 0)
+        np.random.seed(42)
+        idx = np.random.permutation(len(files))
+        files = files[idx]  # Shuffle
+        labels = labels[idx]
+        self.files = files
+        self.labels = labels
+        self.data_len = len(self.files)
+
+    def __len__(self) -> int:
+        return self.data_len
+
+    def __getitem__(self, index: int):
+        img = self.files[index]
+        label = self.labels[index]
+        img = io.imread(img, plugin='pil')
+        img = img.astype(np.float32)
+        img = (img - self.minval) / self.denom  # Normalize to [0, 1]
+        img = img[None].repeat(3, axis=0)  # Stupid but let's replicate 1->3 channel
+        return img, label
+
+    def __repr__(self) -> str:
+        return f"MyDataset({self.name}, {self.path})"
+
+
 class DeadRect(Dataset):
     def __init__(
         self, path: ValueNode, train: bool, cfg: DictConfig, transform, **kwargs

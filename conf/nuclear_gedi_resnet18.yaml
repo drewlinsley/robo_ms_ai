@@ -16,15 +16,15 @@ data:
     datasets:
       COR14:
         train:
-          _target_: src.pl_data.dataset.COR14
+          _target_: src.pl_data.dataset.NuclearGedi
           train: True
           path: "../Dropbox Brown/GEDInls/"
         val:
-          _target_: src.pl_data.dataset.COR14
+          _target_: src.pl_data.dataset.NuclearGedi
           train: False
           path: "../Dropbox Brown/GEDInls/"
         test:
-          _target_: src.pl_data.dataset.COR14
+          _target_: src.pl_data.dataset.NuclearGedi
           train: False
           path: "../Dropbox Brown/GEDInls/"
     num_workers:
