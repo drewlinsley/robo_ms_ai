@@ -138,6 +138,7 @@ class NuclearGedi(Dataset):
         labels = labels[idx]
         self.files = files
         self.labels = labels
+        import pdb;pdb.set_trace()
         self.data_len = len(self.files)
 
     def __len__(self) -> int:
