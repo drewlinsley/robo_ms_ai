@@ -127,8 +127,8 @@ class NuclearGedi(Dataset):
         curated = True if ".npz" in path else False
         if curated:
             data = np.load(path)
-            files = data["files"]
-            labels = data["labels"]
+            files = np.asarray(data["files"]).reshape(-1, 1)
+            labels = np.asarray(data["labels"]).reshape(-1, 1)
         else:
             # List all the files
             print("Globbing files for NuclearGedi, this may take a while...")
