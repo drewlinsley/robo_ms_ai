@@ -2,7 +2,7 @@
 core:
   version: 0.0.1
   tags:
-    - non_nuclear_gedi
+    - nuclear_gedi
 
 # defaults:
 #  - override hydra/launcher: joblib
@@ -11,20 +11,20 @@ data:
   datamodule:
     _target_: src.pl_data.datamodule.MyDataModule
     val_proportion: 0.15
-    dataset_name: NuclearGedi  # Label for experiment
+    dataset_name: NonNuclearGedi  # Label for experiment
     transform_recipe: ${data.datamodule.dataset_name}
     datasets:
       NuclearGedi:
         train:
-          _target_: src.pl_data.dataset.NuclearGedi
+          _target_: src.pl_data.dataset.NonNuclearGedi
           train: True
           path: "/home/drew/robo_ms_ai/data/non_nls_files_train.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
         val:
-          _target_: src.pl_data.dataset.NuclearGedi
+          _target_: src.pl_data.dataset.NonNuclearGedi
           train: False
           path: "/home/drew/robo_ms_ai/data/non_nls_files_val.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
         test:
-          _target_: src.pl_data.dataset.NuclearGedi
+          _target_: src.pl_data.dataset.NonNuclearGedi
           train: False
           path: "/home/drew/robo_ms_ai/data/non_nls_files_test.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
     num_workers:

@@ -2,7 +2,7 @@
 core:
   version: 0.0.1
   tags:
-    - non_nuclear_gedi
+    - nuclear_gedi
 
 # defaults:
 #  - override hydra/launcher: joblib

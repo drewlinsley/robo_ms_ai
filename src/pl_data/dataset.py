@@ -167,6 +167,62 @@ class NuclearGedi(Dataset):
         return f"MyDataset({self.name}, {self.path})"
 
 
+class NonNuclearGedi(Dataset):
+    def __init__(
+        self, path: ValueNode, train: bool, cfg: DictConfig, transform, **kwargs
+    ):
+        super().__init__()
+        self.cfg = cfg
+        self.path = path
+        self.train = train
+        self.transform = transform
+        self.maxval = 33000
+        self.minval = 0
+        self.denom = self.maxval - self.minval
+
+        curated = True if ".npz" in path else False
+        if curated:
+            data = np.load(path)
+            files = data["files"]
+            labels = data["labels"]
+            # files = np.asarray(data["files"]).reshape(-1, 1)
+            # labels = np.asarray(data["labels"]).reshape(-1, 1)
+            # files = torch.from_numpy(files)
+            labels = torch.from_numpy(labels)
+        else:
+            # List all the files
+            print("Globbing files for NuclearGedi, this may take a while...")
+            live = glob(os.path.join(self.path, "GC150nls-Live", "*.tif"))
+            dead = glob(os.path.join(self.path, "GC150nls-Dead", "*.tif"))
+            if not len(live) or not len(dead):
+                raise RuntimeError("No files found at {}".format(self.path))
+            files = np.asarray(live + dead)
+            labels = np.concatenate((np.ones(len(live)), np.zeros(len(dead))), 0).astype(int).reshape(-1, 1)
+        np.random.seed(42)
+        idx = np.random.permutation(len(files))
+        files = files[idx]  # Shuffle
+        labels = labels[idx]
+        self.files = files
+        self.labels = labels
+        self.data_len = len(self.files)
+
+    def __len__(self) -> int:
+        return self.data_len
+
+    def __getitem__(self, index: int):
+        img = self.files[index]
+        label = self.labels[index]
+        label = label.reshape(-1)
+        img = io.imread(img, plugin='pil')
+        img = img.astype(np.float32)
+        img = (img - self.minval) / self.denom  # Normalize to [0, 1]
+        img = img[None].repeat(3, axis=0)  # Stupid but let's replicate 1->3 channel
+        return img, label
+
+    def __repr__(self) -> str:
+        return f"MyDataset({self.name}, {self.path})"
+
+
 class DeadRect(Dataset):
     def __init__(
         self, path: ValueNode, train: bool, cfg: DictConfig, transform, **kwargs

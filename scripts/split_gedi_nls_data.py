@@ -22,16 +22,16 @@ for f in folders:
     files[f] = files[f][:min_files]
 
 # Now split each into train/val/test sets
-val_test_split = 0.2
+val_test_split = 0.8
 train, val, test = {}, {}, {}
 for f in folders:
     it_files = files[f]
     train_cutoff = int(len(it_files) * val_test_split)
     train[f] = it_files[:train_cutoff]
     val_test = it_files[train_cutoff:]
-    val_test_split = train_cutoff // 2
-    val[f] = val_test[:val_test_split]
-    test[f] = val_test[val_test_split:]
+    it_val_test_split = len(val_test) // 2
+    val[f] = val_test[:it_val_test_split]
+    test[f] = val_test[it_val_test_split:]
 
 # Package non-nls together
 non_nls_train, non_nls_val, non_nls_test = [], [], []
