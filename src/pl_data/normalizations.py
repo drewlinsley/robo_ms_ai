@@ -15,15 +15,15 @@ def COR14_normalization(maxval=33000):
 
 def NuclearGedi_normalization(maxval=2 ** 16):
     # First normalize to [0, 1]
-    gedi_mean = np.array([0])
-    gedi_std = np.array([maxval])
+    gedi_mean = [0]
+    gedi_std = [maxval]
     gedi_normalize = transforms.Normalize(
         mean=gedi_mean,
         std=gedi_std)
 
     # Then normalize to imagenet for pretrained models
-    in_mean = np.array([0.485, 0.456, 0.406])
-    in_std = np.array([0.229, 0.224, 0.225])
+    in_mean = [0.485, 0.456, 0.406]
+    in_std = [0.229, 0.224, 0.225]
     in_normalize = transforms.Normalize(
         mean=in_mean,
         std=in_std)
