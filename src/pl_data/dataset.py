@@ -129,6 +129,8 @@ class NuclearGedi(Dataset):
             data = np.load(path)
             files = np.asarray(data["files"]).reshape(-1, 1)
             labels = np.asarray(data["labels"]).reshape(-1, 1)
+            files = torch.from_numpy(files)
+            labels = torch.from_numpy(labels)
         else:
             # List all the files
             print("Globbing files for NuclearGedi, this may take a while...")
