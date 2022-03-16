@@ -86,11 +86,11 @@ np.savez(
 non_nls_data = non_nls_train + non_nls_val + non_nls_test
 non_nls_labels = non_nls_train_labels + non_nls_val_labels + non_nls_test_labels
 non_nls_splits = ["train"] * len(non_nls_train) + ["val"] * len(non_nls_val)  + ["test"] * len(non_nls_test)
-non_nls_df = pd.DataFrame(np.stack((non_nls_data, non_nls_splits, non_nls_labels), 1), columns=["file", "split"])
+non_nls_df = pd.DataFrame(np.stack((non_nls_data, non_nls_splits, non_nls_labels), 1), columns=["file", "split", "label"])
 non_nls_df.to_csv(os.path.join("data", "non_nls_splits.csv"))
 
 nls_data = nls_train + nls_val + nls_test
 non_nls_labels = nls_train_labels + nls_val_labels + nls_test_labels
 nls_splits = ["train"] * len(nls_train) + ["val"] * len(nls_val)  + ["test"] * len(nls_test)
-nls_df = pd.DataFrame(np.stack((nls_data, nls_splits, non_nls_labels), 1), columns=["file", "split"])
+nls_df = pd.DataFrame(np.stack((nls_data, nls_splits, non_nls_labels), 1), columns=["file", "split", "label"])
 nls_df.to_csv(os.path.join("data", "nls_splits.csv"))
