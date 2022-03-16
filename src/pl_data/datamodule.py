@@ -113,6 +113,7 @@ class MyDataModule(pl.LightningDataModule):
         self.batch_size = batch_size
         self.val_proportion = val_proportion
         self.dataset_name = dataset_name
+        import pdb;pdb.set_trace()
         self.datasets = datasets
         self.transform_recipe = transform_recipe
 
