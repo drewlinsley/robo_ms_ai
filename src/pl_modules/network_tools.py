@@ -4,7 +4,7 @@ from src.pl_modules import resnets
 
 
 def get_network(name, num_classes):
-	"""Wrapper for selecting networks."""
+    """Wrapper for selecting networks."""
     if name == "resnet18":
         net = resnets.resnet18(pretrained=False, num_classes=num_classes)
     elif name == "resnet18_pretrained_to_fc":
