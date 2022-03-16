@@ -47,17 +47,25 @@ for f in non_nls:
     nls_val = nls_val + val[f]
     nls_test = nls_test + test[f]
 
-# Save csv and npz of the files
+# Save csv and npzs of the files
 np.savez(
-    os.path.join("data", "non_nls_files"),
-    train=non_nls_train,
-    val=non_nls_val,
-    test=non_nls_test)
+    os.path.join("data", "non_nls_files_train"),
+    files=non_nls_train)
 np.savez(
-    os.path.join("data", "nls_files"),
-    train=nls_train,
-    val=nls_val,
-    test=nls_test)
+    os.path.join("data", "non_nls_files_val"),
+    files=non_nls_val)
+np.savez(
+    os.path.join("data", "non_nls_files_test"),
+    files=non_nls_test)
+np.savez(
+    os.path.join("data", "nls_files_train"),
+    files=nls_train)
+np.savez(
+    os.path.join("data", "nls_files_val"),
+    files=nls_val)
+np.savez(
+    os.path.join("data", "nls_files_test"),
+    files=nls_test)
 
 non_nls_data = non_nls_train + non_nls_val + non_nls_test
 non_nls_splits = ["train"] * len(non_nls_train) + ["val"] * len(non_nls_val)  + ["test"] * len(non_nls_test)

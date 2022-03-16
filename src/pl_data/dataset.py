@@ -113,7 +113,7 @@ class COR14(Dataset):
 
 class NuclearGedi(Dataset):
     def __init__(
-        self, path: ValueNode, train: bool, cfg: DictConfig, transform, **kwargs
+        self, path: ValueNode, train: bool, cfg: DictConfig, transform, curated=True, **kwargs
     ):
         super().__init__()
         self.cfg = cfg
@@ -124,15 +124,19 @@ class NuclearGedi(Dataset):
         self.minval = 0
         self.denom = self.maxval - self.minval
 
-        # List all the files
-        print("Globbing files for NuclearGedi, this may take a while...")
-        live = glob(os.path.join(self.path, "GC150nls-Live", "*.tif"))
-        dead = glob(os.path.join(self.path, "GC150nls-Dead", "*.tif"))
-        if not len(live) or not len(dead):
-            raise RuntimeError("No files found at {}".format(self.path))
-        files = np.asarray(live + dead)
-        labels = np.concatenate((np.ones(len(live)), np.zeros(len(dead))), 0).astype(int).reshape(-1, 1)
-        np.random.seed(42)
+        if curated:
+
+
+        else:
+            # List all the files
+            print("Globbing files for NuclearGedi, this may take a while...")
+            live = glob(os.path.join(self.path, "GC150nls-Live", "*.tif"))
+            dead = glob(os.path.join(self.path, "GC150nls-Dead", "*.tif"))
+            if not len(live) or not len(dead):
+                raise RuntimeError("No files found at {}".format(self.path))
+            files = np.asarray(live + dead)
+            labels = np.concatenate((np.ones(len(live)), np.zeros(len(dead))), 0).astype(int).reshape(-1, 1)
+            np.random.seed(42)
         idx = np.random.permutation(len(files))
         files = files[idx]  # Shuffle
         labels = labels[idx]
