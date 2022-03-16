@@ -16,7 +16,6 @@ def get_network(name, num_classes):
         # Freeze the network
         for param in net.parameters():
             param.requires_grad = False
-        import pdb;pdb.set_trace()
 
         # Train the FC
         net.fc = nn.Linear(net.fc.in_features, num_classes)
