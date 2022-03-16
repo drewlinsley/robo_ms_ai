@@ -10,7 +10,7 @@ def get_network(name, num_classes):
     elif name == "resnet18_pretrained_to_fc":
         net = resnets.resnet18(pretrained=True, num_classes=num_classes)
         net.fc = nn.Linear(net.fc.in_features, num_classes)
-    elif name == "resnet18_pretrained_to_fc":
+    elif name == "resnet18_pretrained_to_fc_frozen":
         net = resnets.resnet18(pretrained=True, num_classes=num_classes)
 
         # Freeze the network
