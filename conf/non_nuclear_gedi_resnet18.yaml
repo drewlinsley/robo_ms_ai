@@ -2,7 +2,7 @@
 core:
   version: 0.0.1
   tags:
-    - consulting
+    - non_nuclear_gedi
 
 # defaults:
 #  - override hydra/launcher: joblib
@@ -11,8 +11,8 @@ data:
   datamodule:
     _target_: src.pl_data.datamodule.MyDataModule
     val_proportion: 0.15
-    dataset_name: NonNuclearGedi  # Label for experiment
-    transform_recipe: NuclearGedi  # ${data.datamodule.dataset_name}
+    dataset_name: NuclearGedi  # Label for experiment
+    transform_recipe: ${data.datamodule.dataset_name}
     datasets:
       NuclearGedi:
         train:
