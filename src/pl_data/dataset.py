@@ -113,7 +113,7 @@ class COR14(Dataset):
 
 class NuclearGedi(Dataset):
     def __init__(
-        self, path: ValueNode, train: bool, cfg: DictConfig, transform, curated=True, **kwargs
+        self, path: ValueNode, train: bool, cfg: DictConfig, transform, **kwargs
     ):
         super().__init__()
         self.cfg = cfg
@@ -124,9 +124,11 @@ class NuclearGedi(Dataset):
         self.minval = 0
         self.denom = self.maxval - self.minval
 
+        curated = True if ".npz" in path else False
         if curated:
-
-
+            data = np.load(path)
+            files = data["files"]
+            labels = data["labels"]
         else:
             # List all the files
             print("Globbing files for NuclearGedi, this may take a while...")
@@ -136,7 +138,7 @@ class NuclearGedi(Dataset):
                 raise RuntimeError("No files found at {}".format(self.path))
             files = np.asarray(live + dead)
             labels = np.concatenate((np.ones(len(live)), np.zeros(len(dead))), 0).astype(int).reshape(-1, 1)
-            np.random.seed(42)
+        np.random.seed(42)
         idx = np.random.permutation(len(files))
         files = files[idx]  # Shuffle
         labels = labels[idx]

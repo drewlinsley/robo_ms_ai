@@ -18,15 +18,15 @@ data:
         train:
           _target_: src.pl_data.dataset.NuclearGedi
           train: True
-          path: "/home/drew/dropbox_symlink/GEDInls/"
+          path: "data/nls_files_train.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
         val:
           _target_: src.pl_data.dataset.NuclearGedi
           train: False
-          path: "/home/drew/dropbox_symlink/GEDInls/"
+          path: "data/nls_files_val.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
         test:
           _target_: src.pl_data.dataset.NuclearGedi
           train: False
-          path: "/home/drew/dropbox_symlink/GEDInls/"
+          path: "data/nls_files_test.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
     num_workers:
       train: 4
       val: 4
