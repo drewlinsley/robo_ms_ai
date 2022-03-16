@@ -62,9 +62,9 @@ np.savez(
 non_nls_data = non_nls_train + non_nls_val + non_nls_test
 non_nls_splits = ["train"] * len(non_nls_train) + ["val"] * len(non_nls_val)  + ["test"] * len(non_nls_test)
 non_nls_df = pd.DataFrame(np.stack((non_nls_data, non_nls_splits), 1), columns=["file", "split"])
-non_nls_df.to_csv("non_nls_splits.csv")
+non_nls_df.to_csv(os.path.join("data", "non_nls_splits.csv"))
 
 nls_data = nls_train + nls_val + nls_test
 nls_splits = ["train"] * len(nls_train) + ["val"] * len(nls_val)  + ["test"] * len(nls_test)
 nls_df = pd.DataFrame(np.stack((nls_data, nls_splits), 1), columns=["file", "split"])
-nls_df.to_csv("non_nls_splits.csv")
+nls_df.to_csv(os.path.join("data", "nls_splits.csv"))
