@@ -11,7 +11,7 @@ data:
   datamodule:
     _target_: src.pl_data.datamodule.MyDataModule
     val_proportion: 0.15
-    dataset_name: COR14  # Label for experiment
+    dataset_name: NuclearGedi  # Label for experiment
     transform_recipe: ${data.datamodule.dataset_name}
     datasets:
       COR14:

@@ -18,8 +18,8 @@ from captum.attr import visualization as viz
 
 from src.common.utils import iterate_elements_in_batches, render_images
 
-from src.pl_modules import resnets
 from src.pl_modules import losses
+from src.pl_modules.network_tools import get_network
 
 from pl_bolts.optimizers.lr_scheduler import linear_warmup_decay
 
@@ -41,12 +41,7 @@ class MyModel(pl.LightningModule):
         else:
             self.final_nl = lambda x, dim: x
 
-        if self.name == "resnet18":
-            self.net = resnets.resnet18(pretrained=False, num_classes=num_classes)
-        elif self.name == "simclr_resnet18":
-            self.net = resnets.resnet18(pretrained=False, num_classes=num_classes)
-        else:
-            raise NotImplementedError("Could not find network {}.".format(self.net))
+        self.net = get_network(self.name, num_classes)
 
         metric = torchmetrics.Accuracy()
         self.train_accuracy = metric.clone().cuda()
