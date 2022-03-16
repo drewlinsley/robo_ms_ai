@@ -12,7 +12,7 @@ nls = folders[2:]
 files = {}
 min_files = 10000000
 for f in folders:
-    files[f] = glob(os.path.join(f, "*.tif"))
+    files[f] = glob(os.path.join(db_folder, f, "*.tif"))
     min_files = min(min_files, len(files[f]))
 
 print("Minimum files: {}".format(min_files))
