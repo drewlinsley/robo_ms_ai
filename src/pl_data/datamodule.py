@@ -59,6 +59,23 @@ TRANSFORM_RECIPES = {
                 normalizations.COR14_normalization(),
             ]),
     },
+    "NuclearGedi": {
+        "train": transforms.Compose([
+                transforms.ToTensor(),
+                transforms.RandomCrop(224),
+                transforms.RandomHorizontalFlip(),
+                transforms.RandomVerticalFlip(),
+                normalizations.NuclearGedi_normalization(),
+            ]),
+        "val": transforms.Compose([
+                transforms.ToTensor(),
+                normalizations.NuclearGedi_normalization(),
+            ]),
+        "test": transforms.Compose([
+                transforms.ToTensor(),
+                normalizations.NuclearGedi_normalization(),
+            ]),
+    },
     "SIMCLR_COR14": {
         "train": SimCLRTrainDataTransform(
             input_height=224,
@@ -107,7 +124,6 @@ class MyDataModule(pl.LightningDataModule):
 
     def setup(self, stage: Optional[str] = None):
         """Prepare datasets for train/val/test."""
-        import pdb;pdb.set_trace()
         selected_recipe = TRANSFORM_RECIPES.get(self.transform_recipe, None)
         assert selected_recipe is not None, "Could not recognize your transform recipe: {}".format(self.transform_recipe)  # noqa
         train_transform = selected_recipe["train"]
