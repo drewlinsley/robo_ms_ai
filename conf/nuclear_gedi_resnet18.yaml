@@ -14,7 +14,7 @@ data:
     dataset_name: NuclearGedi  # Label for experiment
     transform_recipe: ${data.datamodule.dataset_name}
     datasets:
-      NuclearGedi:
+      NonNuclearGedi:
         train:
           _target_: src.pl_data.dataset.NuclearGedi
           train: True
