@@ -155,6 +155,7 @@ class MyModel(pl.LightningModule):
 
     def validation_epoch_end(self, outputs: List[Any]) -> None:
         if self.plot_gradients_val:
+            integrated_gradients = IntegratedGradients(self.forward)
             noise_tunnel = NoiseTunnel(integrated_gradients)
         else:
             noise_tunnel = None
@@ -213,7 +214,7 @@ class MyModel(pl.LightningModule):
         images_feat_viz = []
 
         # integrated_gradients = IntegratedGradients(self.forward)
-        noise_tunnel = NoiseTunnel(integrated_gradients)
+        # noise_tunnel = NoiseTunnel(integrated_gradients)
         import pdb;pdb.set_trace()
         self.logger.experiment.log({"Test Images": images}, step=self.global_step)
         return  # Don't need this stuff below vvvv
