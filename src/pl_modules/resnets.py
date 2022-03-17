@@ -14,7 +14,7 @@ from pl_bolts.models.self_supervised.resnets import resnet50 as resnet50_pl
 
 
 def resnet18(pretrained=False, num_classes=None, num_samples=None, batch_size=None):
-    assert num_classes is not None, "You must pass the number of classes to your model."
+    # assert num_classes is not None, "You must pass the number of classes to your model."
     model = torchvision.models.resnet18(pretrained=pretrained)  # , num_classes=num_classes)
     # model.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
     # model.maxpool = nn.Identity()
@@ -22,7 +22,7 @@ def resnet18(pretrained=False, num_classes=None, num_samples=None, batch_size=No
 
 
 def resnet50(pretrained=False, num_classes=None, num_samples=None, batch_size=None):
-    assert num_classes is not None, "You must pass the number of classes to your model."
+    # assert num_classes is not None, "You must pass the number of classes to your model."
     model = torchvision.models.resnet50(pretrained=pretrained)  # , num_classes=num_classes)
     # model.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
     # model.maxpool = nn.Identity()
