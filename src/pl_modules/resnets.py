@@ -14,7 +14,7 @@ from pl_bolts.models.self_supervised.resnets import resnet18_pl, resnet50_pl
 
 def resnet18(pretrained=False, num_classes=None, num_samples=None, batch_size=None):
     assert num_classes is not None, "You must pass the number of classes to your model."
-    model = torchvision.models.resnet18_pl(pretrained=pretrained, num_classes=num_classes)
+    model = torchvision.models.resnet18(pretrained=pretrained, num_classes=num_classes)
     model.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
     # model.maxpool = nn.Identity()
     return model
@@ -22,7 +22,7 @@ def resnet18(pretrained=False, num_classes=None, num_samples=None, batch_size=No
 
 def resnet50(pretrained=False, num_classes=None, num_samples=None, batch_size=None):
     assert num_classes is not None, "You must pass the number of classes to your model."
-    model = torchvision.models.resnet50_pl(pretrained=pretrained, num_classes=num_classes)
+    model = torchvision.models.resnet50(pretrained=pretrained, num_classes=num_classes)
     model.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
     # model.maxpool = nn.Identity()
     return model
@@ -88,9 +88,11 @@ class SimCLR(LightningModule):
 
     def init_model(self):
         if self.arch == "resnet18":
-            backbone = resnet18
+            backbone = resnet18_pl
         elif self.arch == "resnet50":
-            backbone = resnet50
+            backbone = resnet50_pl
+        else:
+            raise NotImplementedError(self.arch)
         return backbone(first_conv=self.first_conv, maxpool1=self.maxpool1, return_all_feature_maps=False)
 
     def forward(self, x):
