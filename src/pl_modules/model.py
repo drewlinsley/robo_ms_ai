@@ -46,6 +46,7 @@ class MyModel(pl.LightningModule):
         self.num_classes = num_classes
         self.loss = getattr(losses, loss)  # Add this to the config
         self.final_nl_dim = final_nl_dim
+        self.plot_gradients_val = plot_gradients_val
 
         if final_nl:
             self.final_nl = getattr(F, final_nl)
