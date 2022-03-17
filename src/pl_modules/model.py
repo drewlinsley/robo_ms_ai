@@ -47,6 +47,7 @@ class MyModel(pl.LightningModule):
         self.loss = getattr(losses, loss)  # Add this to the config
         self.final_nl_dim = final_nl_dim
 
+        import pdb;pdb.set_trace()
         if final_nl:
             self.final_nl = getattr(F, final_nl)
         else:
