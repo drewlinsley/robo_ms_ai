@@ -8,15 +8,23 @@ from torch.nn import functional as F
 from pytorch_lightning import LightningModule, Trainer
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
 
-from pl_bolts.models.self_supervised.resnets import resnet18, resnet50
+from pl_bolts.models.self_supervised.resnets import resnet18_pl, resnet50_pl
 # from pl_bolts.models.self_supervised import SimCLR
 
 
 def resnet18(pretrained=False, num_classes=None, num_samples=None, batch_size=None):
     assert num_classes is not None, "You must pass the number of classes to your model."
-    model = torchvision.models.resnet18(pretrained=False, num_classes=num_classes)
+    model = torchvision.models.resnet18_pl(pretrained=pretrained, num_classes=num_classes)
     model.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    model.maxpool = nn.Identity()
+    # model.maxpool = nn.Identity()
+    return model
+
+
+def resnet50(pretrained=False, num_classes=None, num_samples=None, batch_size=None):
+    assert num_classes is not None, "You must pass the number of classes to your model."
+    model = torchvision.models.resnet50_pl(pretrained=pretrained, num_classes=num_classes)
+    model.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    # model.maxpool = nn.Identity()
     return model
 
 
