@@ -47,7 +47,6 @@ class MyModel(pl.LightningModule):
         self.loss = getattr(losses, loss)  # Add this to the config
         self.final_nl_dim = final_nl_dim
 
-        import pdb;pdb.set_trace()
         if final_nl:
             self.final_nl = getattr(F, final_nl)
         else:
@@ -85,6 +84,7 @@ class MyModel(pl.LightningModule):
         return out
 
     def training_step_end(self, out):
+        import pdb;pdb.set_trace()
         if self.final_nl_dim < 0:
             act = self.final_nl(out["logits"])
         else:
