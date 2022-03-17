@@ -182,7 +182,7 @@ class MyModel(pl.LightningModule):
                     target=output_element["y_true"],
                     internal_batch_size=50)
                 vz = viz.visualize_image_attr(n
-                    p.transpose(attributions_ig_nt.squeeze(0).cpu().detach().numpy(), (1, 2, 0)),
+                    np.transpose(attributions_ig_nt.squeeze(0).cpu().detach().numpy(), (1, 2, 0)),
                     np.transpose(output_element["image"].cpu().detach().numpy(), (1, 2, 0)),
                     method='blended_heat_map',
                     show_colorbar=True,
