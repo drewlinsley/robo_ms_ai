@@ -35,11 +35,12 @@ def get_network(name, num_classes):
         # Freeze the network
         for name, param in net.named_parameters():
             if "layer4" in name:
-                pass
+                param.requires_grad = True
             else:
                 param.requires_grad = False
 
         # Train the FC
+        import pdb;pdb.set_trace()
         net.fc = nn.Linear(net.fc.in_features, num_classes)
 
     elif name == "simclr_resnet18":
