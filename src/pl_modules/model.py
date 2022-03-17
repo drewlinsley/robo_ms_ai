@@ -181,7 +181,7 @@ class MyModel(pl.LightningModule):
                     nt_type='smoothgrad_sq',
                     target=output_element["y_true"],
                     internal_batch_size=50)
-                vz = viz.visualize_image_attr(n
+                vz = viz.visualize_image_attr(
                     np.transpose(attributions_ig_nt.squeeze(0).cpu().detach().numpy(), (1, 2, 0)),
                     np.transpose(output_element["image"].cpu().detach().numpy(), (1, 2, 0)),
                     method='blended_heat_map',
