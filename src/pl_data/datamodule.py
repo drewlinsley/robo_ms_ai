@@ -65,6 +65,11 @@ TRANSFORM_RECIPES = {
                 transforms.RandomCrop(224),
                 transforms.RandomHorizontalFlip(),
                 transforms.RandomVerticalFlip(),
+                transforms.RandomAffine(
+                    degrees=(-90, 90),
+                    scale=(0.8, 1.2),
+                    shear=(-0.05, 0.05)),
+                transforms.RandomErasing(),
                 normalizations.NuclearGedi_normalization(),
             ]),
         "val": transforms.Compose([
