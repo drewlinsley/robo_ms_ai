@@ -20,7 +20,7 @@ def get_network(name, num_classes):
         # Train the FC
         net.fc = nn.Linear(net.fc.in_features, num_classes)
     elif name == "resnet50_pretrained_to_fc_frozen":
-        net = resnets.resnet50(pretrained=True, num_classes=num_classes)
+        net = resnets.resnet50(pretrained=True)
 
         # Freeze the network
         for param in net.parameters():
@@ -30,7 +30,7 @@ def get_network(name, num_classes):
         net.fc = nn.Linear(net.fc.in_features, num_classes)
 
     elif name == "resnet50_pretrained_to_last_block_frozen":
-        net = resnets.resnet50(pretrained=True, num_classes=num_classes)
+        net = resnets.resnet50(pretrained=True)
 
         # Freeze the network
         for param in net.parameters():

@@ -73,7 +73,7 @@ logging:
     log_momentum: False
 model:
   _target_: src.pl_modules.model.MyModel
-  name: resnet50_pretrained_to_fc_frozen
+  name: resnet50_pretrained_to_last_block_frozen
   num_classes: 1
   final_nl: sigmoid
   final_nl_dim: -1
