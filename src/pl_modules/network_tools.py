@@ -33,9 +33,11 @@ def get_network(name, num_classes):
         net = resnets.resnet50(pretrained=True)
 
         # Freeze the network
-        for param in net.parameters():
-            param.requires_grad = False
-        import pdb;pdb.set_trace()
+        for name, param in net.named_parameters():
+            if "layer4" in name:
+                pass
+            else:
+                param.requires_grad = False
 
         # Train the FC
         net.fc = nn.Linear(net.fc.in_features, num_classes)
