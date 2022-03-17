@@ -1,0 +1,125 @@
+# metadata specialised for each experiment
+core:
+  version: 0.0.1
+  tags:
+    - nuclear_gedi
+
+# defaults:
+#  - override hydra/launcher: joblib
+
+data:
+  datamodule:
+    _target_: src.pl_data.datamodule.MyDataModule
+    val_proportion: 0.15
+    dataset_name: NuclearGedi  # Label for experiment
+    transform_recipe: ${data.datamodule.dataset_name}
+    datasets:
+      NuclearGedi:
+        train:
+          _target_: src.pl_data.dataset.NuclearGedi
+          train: True
+          path: "/home/drew/robo_ms_ai/data/nls_files_train.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
+        val:
+          _target_: src.pl_data.dataset.NuclearGedi
+          train: False
+          path: "/home/drew/robo_ms_ai/data/nls_files_val.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
+        test:
+          _target_: src.pl_data.dataset.NuclearGedi
+          train: False
+          path: "/home/drew/robo_ms_ai/data/nls_files_test.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
+    num_workers:
+      train: 4
+      val: 4
+      test: 4
+
+    batch_size:
+      train: 32  # 240  # 128
+      val: 32 # 240  # 128
+      test: 32  # 128
+hydra:
+  run:
+    dir: ./experiments/${now:%Y-%m-%d}/${now:%H-%M-%S}
+
+  sweep:
+    dir: ./experiments/multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}/
+    subdir: ${hydra.job.num}_${hydra.job.id}
+
+  job:
+    env_set:
+      WANDB_START_METHOD: thread
+
+  # launcher:
+  #   n_jobs: 4
+  #   batch_size: auto
+
+logging:
+  n_elements_to_log: 32
+  normalize_visualization: True
+
+  # log frequency
+  val_check_interval: 1.0
+  progress_bar_refresh_rate: 20
+
+  wandb:
+    project: nuclear_gedi
+    entity: drewlinsley
+
+    watch:
+      log: 'all'
+      log_freq: 10
+
+  lr_monitor:
+    logging_interval: "step"
+    log_momentum: False
+model:
+  _target_: src.pl_modules.model.MyModel
+  name: resnet50_pretrained_to_fc_frozen
+  num_classes: 1
+  final_nl: sigmoid
+  final_nl_dim: -1
+  loss: bce_loss
+
+optim:
+  optimizer:
+    #  Adam-oriented deep learning
+    _target_: torch.optim.Adam
+    #  These are all default parameters for the Adam optimizer
+    lr: 1e-3  # 0.001
+    betas: [ 0.9, 0.999 ]
+    eps: 1e-08
+    weight_decay: 0.
+
+  use_lr_scheduler: False
+  lr_scheduler:
+    _target_: torch.optim.lr_scheduler.CosineAnnealingWarmRestarts
+    T_0: 10
+    T_mult: 2
+    eta_min: 0 # min value for the lr
+    last_epoch: -1
+
+train:
+  # reproducibility
+  deterministic: False
+  random_seed: 42
+
+  # training
+
+  pl_trainer:
+    fast_dev_run: False # Enable this for debug purposes
+    gpus: 1
+    precision: 32
+    max_steps: 200000
+    # accumulate_grad_batches: 1
+    # num_sanity_val_steps: 2
+    gradient_clip_val: 10000000.0  # 10.
+
+  monitor_metric: 'val_loss'
+  monitor_metric_mode: 'min'
+
+  early_stopping:
+    patience: 42
+    verbose: False
+
+  model_checkpoints:
+    save_top_k: 2
+    verbose: False

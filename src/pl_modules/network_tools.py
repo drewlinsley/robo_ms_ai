@@ -19,6 +19,15 @@ def get_network(name, num_classes):
 
         # Train the FC
         net.fc = nn.Linear(net.fc.in_features, num_classes)
+    elif name == "resnet50_pretrained_to_fc_frozen":
+        net = resnets.resnet50(pretrained=True, num_classes=num_classes)
+
+        # Freeze the network
+        for param in net.parameters():
+            param.requires_grad = False
+
+        # Train the FC
+        net.fc = nn.Linear(net.fc.in_features, num_classes)
 
     elif name == "simclr_resnet18":
         net = resnets.resnet18(pretrained=False, num_classes=num_classes)

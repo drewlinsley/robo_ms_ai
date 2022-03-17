@@ -25,7 +25,18 @@ from pl_bolts.optimizers.lr_scheduler import linear_warmup_decay
 
 
 class MyModel(pl.LightningModule):
-    def __init__(self, cfg: DictConfig, name, num_classes, final_nl, loss, final_nl_dim, self_supervised=False, *args, **kwargs) -> None:
+    def __init__(
+            self,
+            cfg: DictConfig,
+            name,
+            num_classes,
+            final_nl,
+            loss,
+            final_nl_dim,
+            plot_gradients_val=True,
+            self_supervised=False,
+            *args,
+            **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.cfg = cfg
         self.save_hyperparameters(cfg)
@@ -140,11 +151,16 @@ class MyModel(pl.LightningModule):
         }
 
     def validation_epoch_end(self, outputs: List[Any]) -> None:
+        if self.plot_gradients_val:
+            noise_tunnel = NoiseTunnel(integrated_gradients)
+        else:
+            noise_tunnel = None
+        images, images_feat_viz = [], []
         batch_size = self.cfg.data.datamodule.batch_size.val
-        images = []
         for output_element in iterate_elements_in_batches(
             outputs, batch_size, self.cfg.logging.n_elements_to_log
         ):  
+            # Plot images
             rendered_image = render_images(
                 output_element["image"],
                 autoshow=False,
@@ -156,7 +172,36 @@ class MyModel(pl.LightningModule):
                     caption=caption,
                 )
             )
-        self.logger.experiment.log({"Validation Images": images}, step=self.global_step)
+
+            # Add gradient visualization if requested
+            if noise_tunnel is not None:
+                attributions_ig_nt = noise_tunnel.attribute(
+                    output_element["image"].unsqueeze(0),
+                    nt_samples=50,
+                    nt_type='smoothgrad_sq',
+                    target=output_element["y_true"],
+                    internal_batch_size=50)
+                vz = viz.visualize_image_attr(n
+                    p.transpose(attributions_ig_nt.squeeze(0).cpu().detach().numpy(), (1, 2, 0)),
+                    np.transpose(output_element["image"].cpu().detach().numpy(), (1, 2, 0)),
+                    method='blended_heat_map',
+                    show_colorbar=True,
+                    sign='positive',
+                    outlier_perc=1)
+                images_feat_viz.append(
+                    wandb.Image(
+                        vz[0],
+                        caption=caption,
+                    ))
+                plt.close(vz[0])
+
+        self.logger.experiment.log(
+            {"Validation Images": images},
+            step=self.global_step)
+        if noise_tunnel is not None:
+            self.logger.experiment.log(
+                {"Validation Images Viz": images_feat_viz},
+                step=self.global_step)
 
     def test_epoch_end(self, outputs: List[Any]) -> None:
         batch_size = self.cfg.data.datamodule.batch_size.test
@@ -165,7 +210,7 @@ class MyModel(pl.LightningModule):
         images_feat_viz = []
 
         # integrated_gradients = IntegratedGradients(self.forward)
-        # noise_tunnel = NoiseTunnel(integrated_gradients)
+        noise_tunnel = NoiseTunnel(integrated_gradients)
         import pdb;pdb.set_trace()
         self.logger.experiment.log({"Test Images": images}, step=self.global_step)
         return  # Don't need this stuff below vvvv
@@ -175,12 +220,19 @@ class MyModel(pl.LightningModule):
         ):
 
             #import pdb; pdb.set_trace()
-            attributions_ig_nt = noise_tunnel.attribute(output_element["image"].unsqueeze(0), nt_samples=50,
-                                                        nt_type='smoothgrad_sq', target=output_element["y_true"],
-                                                        internal_batch_size=50)
-            vz = viz.visualize_image_attr(np.transpose(attributions_ig_nt.squeeze(0).cpu().detach().numpy(), (1, 2, 0)),
-                                          np.transpose(output_element["image"].cpu().detach().numpy(), (1, 2, 0)),
-                                          method='blended_heat_map', show_colorbar=True, sign='positive', outlier_perc=1)
+            attributions_ig_nt = noise_tunnel.attribute(
+                output_element["image"].unsqueeze(0),
+                nt_samples=50,
+                nt_type='smoothgrad_sq',
+                target=output_element["y_true"],
+                internal_batch_size=50)
+            vz = viz.visualize_image_attr(n
+                p.transpose(attributions_ig_nt.squeeze(0).cpu().detach().numpy(), (1, 2, 0)),
+                np.transpose(output_element["image"].cpu().detach().numpy(), (1, 2, 0)),
+                method='blended_heat_map',
+                show_colorbar=True,
+                sign='positive',
+                outlier_perc=1)
 
             rendered_image = render_images(output_element["image"], autoshow=False)
             caption = f"y_pred: {output_element['logits'].argmax()}  [gt: {output_element['y_true']}]"
