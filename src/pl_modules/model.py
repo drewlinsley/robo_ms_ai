@@ -45,7 +45,7 @@ class MyModel(pl.LightningModule):
         # self.automatic_optimization = False
         self.num_classes = num_classes
         self.loss = getattr(losses, loss)  # Add this to the config
-        self.final_nl_dim = final_nl_dim
+        self.final_nl_dim = final_nl_dimyh
         self.plot_gradients_val = plot_gradients_val
 
         if final_nl:
@@ -91,7 +91,15 @@ class MyModel(pl.LightningModule):
             act = self.final_nl(out["logits"])
         else:
             act = self.final_nl(out["logits"], dim=-1)
-        self.train_accuracy(act, out["y"])
+
+        y = out["y"]
+        act_shape = act.shape
+        y_shape = y.shape
+
+        if act_shape[1] != y_shape[1]:
+            y = F.one_hot(y, act_shape[1])
+
+        self.train_accuracy(act, y)
         self.log_dict(
             {
                 "train_acc": self.train_accuracy,
@@ -114,7 +122,15 @@ class MyModel(pl.LightningModule):
             act = self.final_nl(out["logits"])
         else:
             act = self.final_nl(out["logits"], dim=-1)
-        self.val_accuracy(act, out["y"])
+
+        y = out["y"]
+        act_shape = act.shape
+        y_shape = y.shape
+
+        if act_shape[1] != y_shape[1]:
+            y = F.one_hot(y, act_shape[1])
+
+        self.val_accuracy(act, y)
         self.log_dict(
             {
                 "val_acc": self.val_accuracy,
@@ -139,7 +155,15 @@ class MyModel(pl.LightningModule):
             act = self.final_nl(out["logits"])
         else:
             act = self.final_nl(out["logits"], dim=-1)
-        self.test_accuracy(act, out["y"])
+
+        y = out["y"]
+        act_shape = act.shape
+        y_shape = y.shape
+
+        if act_shape[1] != y_shape[1]:
+            y = F.one_hot(y, act_shape[1])
+
+        self.test_accuracy(act, y)
         self.log_dict(
             {
                 "test_acc": self.test_accuracy,
