@@ -18,7 +18,7 @@ def bce_loss(yhat, y):
 def cce_loss(yhat, y):
     """Wrapper for the normal nll loss."""
     y = y.long().squeeze()
-    yhat = y.float()
+    yhat = yhat.float()
     return nn.CrossEntropyLoss()(yhat, y)
 
 
