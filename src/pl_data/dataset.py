@@ -156,7 +156,7 @@ class NuclearGedi(Dataset):
     def __getitem__(self, index: int):
         img = self.files[index]
         label = self.labels[index]
-        label = F.one_hot(label, 2)  # .reshape(-1)
+        label = label.reshape(-1)
         img = io.imread(img, plugin='pil')
         img = img.astype(np.float32)
         img = (img - self.minval) / self.denom  # Normalize to [0, 1]
@@ -212,7 +212,7 @@ class NonNuclearGedi(Dataset):
     def __getitem__(self, index: int):
         img = self.files[index]
         label = self.labels[index]
-        label = F.one_hot(label, 2)  # .reshape(-1)
+        label = label.reshape(-1)
         img = io.imread(img, plugin='pil')
         img = img.astype(np.float32)
         img = (img - self.minval) / self.denom  # Normalize to [0, 1]
