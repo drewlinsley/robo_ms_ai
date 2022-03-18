@@ -179,7 +179,6 @@ class MyModel(pl.LightningModule):
 
             # Add gradient visualization if requested
             if noise_tunnel is not None:
-                import pdb;pdb.set_trace()
                 attributions_ig_nt = noise_tunnel.attribute(
                     output_element["image"].unsqueeze(0),
                     nt_samples=50,
