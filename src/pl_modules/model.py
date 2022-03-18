@@ -205,10 +205,10 @@ class MyModel(pl.LightningModule):
             if noise_tunnel is not None:
                 attributions_ig_nt = noise_tunnel.attribute(
                     output_element["image"].unsqueeze(0),
-                    nt_samples=50,
+                    nt_samples=20,
                     nt_type='smoothgrad_sq',
                     target=output_element["y_true"],
-                    internal_batch_size=50)
+                    internal_batch_size=20)
                 vz = viz.visualize_image_attr(
                     np.transpose(attributions_ig_nt.squeeze(0).cpu().detach().numpy(), (1, 2, 0)),
                     np.transpose(output_element["image"].cpu().detach().numpy(), (1, 2, 0)),
