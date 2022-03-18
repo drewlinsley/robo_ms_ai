@@ -51,7 +51,7 @@ class MyModel(pl.LightningModule):
         if final_nl:
             self.final_nl = getattr(F, final_nl)
         else:
-            self.final_nl = lambda x
+            self.final_nl = lambda x: x
 
         self.net = get_network(self.name, num_classes)
 
