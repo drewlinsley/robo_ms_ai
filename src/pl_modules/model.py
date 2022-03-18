@@ -214,6 +214,7 @@ class MyModel(pl.LightningModule):
                     np.transpose(output_element["image"].cpu().detach().numpy(), (1, 2, 0)),
                     method='blended_heat_map',
                     show_colorbar=True,
+                    use_pyplot=False,
                     sign='positive',
                     outlier_perc=1)
                 images_feat_viz.append(
