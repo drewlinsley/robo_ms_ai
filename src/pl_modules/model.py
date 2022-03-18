@@ -97,7 +97,7 @@ class MyModel(pl.LightningModule):
         y_shape = y.shape
 
         if act_shape[1] != y_shape[1]:
-            y = F.one_hot(y, act_shape[1])
+            y = F.one_hot(y, act_shape[1].squeeze(1))
 
         self.train_accuracy(act, y)
         self.log_dict(
@@ -128,7 +128,7 @@ class MyModel(pl.LightningModule):
         y_shape = y.shape
 
         if act_shape[1] != y_shape[1]:
-            y = F.one_hot(y, act_shape[1])
+            y = F.one_hot(y, act_shape[1].squeeze(1))
 
         self.val_accuracy(act, y)
         self.log_dict(
@@ -161,7 +161,7 @@ class MyModel(pl.LightningModule):
         y_shape = y.shape
 
         if act_shape[1] != y_shape[1]:
-            y = F.one_hot(y, act_shape[1])
+            y = F.one_hot(y, act_shape[1].squeeze(1))
 
         self.test_accuracy(act, y)
         self.log_dict(
