@@ -75,9 +75,9 @@ model:
   _target_: src.pl_modules.model.MyModel
   name: resnet18_pretrained_to_last_block_frozen
   num_classes: 2  # Using 2 for captum visualization :-(
-  final_nl: softmax
-  final_nl_dim: 1
-  loss: nll_loss  # bce_loss
+  final_nl: False
+  final_nl_dim: -1
+  loss: cce_loss  # bce_loss
 
 optim:
   optimizer:

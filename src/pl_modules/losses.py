@@ -15,6 +15,11 @@ def bce_loss(yhat, y):
     return nn.BCELoss()(yhat.float(), y.float())
 
 
+def cce_loss(yhat, y):
+    """Wrapper for the normal nll loss."""
+    return nn.CrossEntropyLoss()(yhat.float(), y.long())
+
+
 def nt_xent_loss(out_1, out_2, temperature=0.1, eps=1e-6):
     """
     assume out_1 and out_2 are normalized
