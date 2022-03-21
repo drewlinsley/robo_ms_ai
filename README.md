@@ -29,3 +29,8 @@ COR14 example: `cd genentech && python run.py --config-name=simclr_cor14_resnet1
 ## Self-supervised evaluation
 
 *Transfer trained self-sup models to a new task, such as classifying disease in a cell.*
+
+
+## Eval existing weights
+
+`CUDA_VISIBLE_DEVICES=0 python run.py --config-name=nuclear_gedi_resnet18.yaml -m model.ckpt=experiments/2022-03-18/11-14-52/experiments/2022-03-18/11-14-52/nuclear_gedi/wzz53lvw/checkpoints/epoch=273-step=39455.ckpt train.eval_only=True`
