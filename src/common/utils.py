@@ -12,7 +12,6 @@ def weights_update(model, checkpoint):
     model_dict = model.state_dict()
     pretrained_dict = {}
     for k, v in checkpoint['state_dict'].items():
-        import pdb;pdb.set_trace()
         if k in model_dict:
             pretrained_dict[k] = v
     model_dict.update(pretrained_dict)
