@@ -105,7 +105,7 @@ train:
   random_seed: 42
 
   # training
-  eval_only: False
+  eval_only: True
   pl_trainer:
     fast_dev_run: False # Enable this for debug purposes
     gpus: 1
