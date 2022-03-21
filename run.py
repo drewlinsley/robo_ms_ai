@@ -114,6 +114,8 @@ def run(cfg: DictConfig) -> None:
             model = weights_update(
                 model=model,
                 checkpoint=torch.load(cfg.train.ckpt))
+        else:
+            print("Evaluating with random weights.")
 
         trainer = pl.Trainer(
             logger=False,
