@@ -240,7 +240,6 @@ class MyModel(pl.LightningModule):
 
         integrated_gradients = Occlusion(self.forward)
         # noise_tunnel = NoiseTunnel(integrated_gradients)
-        import pdb;pdb.set_trace()
         for output_element in iterate_elements_in_batches(
             outputs, batch_size, self.cfg.logging.n_elements_to_log
         ):
@@ -249,7 +248,7 @@ class MyModel(pl.LightningModule):
             attributions_ig_nt = integrated_gradients.attribute(
                 output_element["image"].unsqueeze(0),
                 target=output_element["y_true"],
-                sliding_window_shapes=(3, 3))
+                sliding_window_shapes=(1, 3, 3))
             # attributions_ig_nt = noise_tunnel.attribute(
             #     output_element["image"].unsqueeze(0),
             #     nt_samples=50,
@@ -263,7 +262,7 @@ class MyModel(pl.LightningModule):
                 show_colorbar=True,
                 sign='positive',
                 outlier_perc=1)
-
+        import pdb;pdb.set_trace()
             rendered_image = render_images(output_element["image"], autoshow=False)
             caption = f"y_pred: {output_element['logits'].argmax()}  [gt: {output_element['y_true']}]"
             images.append(
