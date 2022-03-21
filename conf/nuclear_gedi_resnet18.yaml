@@ -73,7 +73,7 @@ logging:
     log_momentum: False
 model:
   _target_: src.pl_modules.model.MyModel
-  ckpt: False  # load pretrained weights
+  ckpt: "False"  # load pretrained weights
   name: resnet18_pretrained_to_last_block_frozen
   num_classes: 2  # Using 2 for captum visualization :-(
   final_nl: False

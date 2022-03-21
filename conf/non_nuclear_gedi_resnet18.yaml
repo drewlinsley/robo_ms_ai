@@ -71,6 +71,7 @@ logging:
   lr_monitor:
     logging_interval: "step"
     log_momentum: False
+
 model:
   _target_: src.pl_modules.model.MyModel
   ckpt: False  # load pretrained weights
