@@ -33,9 +33,9 @@ data:
       test: 4
 
     batch_size:
-      train: 128  # 240  # 128
-      val: 128 # 240  # 128
-      test: 128  # 128
+      train: 32  # 240  # 128
+      val: 32 # 240  # 128
+      test: 32  # 128
 hydra:
   run:
     dir: ./experiments/${now:%Y-%m-%d}/${now:%H-%M-%S}
@@ -71,9 +71,10 @@ logging:
   lr_monitor:
     logging_interval: "step"
     log_momentum: False
+
 model:
   _target_: src.pl_modules.model.MyModel
-  name: resnet50_pretrained_to_last_block_frozen
+  name: resnet18_pretrained_to_last_block_frozen
   num_classes: 2  # Using 2 for captum visualization :-(
   final_nl: False
   final_nl_dim: -1
@@ -104,7 +105,7 @@ train:
 
   # training
   eval_only: False
-  ckpt: False  # load pretrained weights
+  ckpt: experiments/2022-03-18/11-14-52/experiments/2022-03-18/11-14-52/nuclear_gedi/wzz53lvw/checkpoints/epoch=273-step=39455.ckpt  # load pretrained weights
   pl_trainer:
     fast_dev_run: False # Enable this for debug purposes
     gpus: 1

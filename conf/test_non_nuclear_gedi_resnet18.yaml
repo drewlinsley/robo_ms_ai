@@ -11,22 +11,22 @@ data:
   datamodule:
     _target_: src.pl_data.datamodule.MyDataModule
     val_proportion: 0.15
-    dataset_name: NuclearGedi  # Label for experiment
-    transform_recipe: ${data.datamodule.dataset_name}
+    dataset_name: NonNuclearGedi  # Label for experiment
+    transform_recipe: NuclearGedi
     datasets:
-      NuclearGedi:
+      NonNuclearGedi:
         train:
-          _target_: src.pl_data.dataset.NuclearGedi
+          _target_: src.pl_data.dataset.NonNuclearGedi
           train: True
-          path: "/home/drew/robo_ms_ai/data/nls_files_train.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
+          path: "/home/drew/robo_ms_ai/data/non_nls_files_train.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
         val:
-          _target_: src.pl_data.dataset.NuclearGedi
+          _target_: src.pl_data.dataset.NonNuclearGedi
           train: False
-          path: "/home/drew/robo_ms_ai/data/nls_files_val.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
+          path: "/home/drew/robo_ms_ai/data/non_nls_files_val.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
         test:
-          _target_: src.pl_data.dataset.NuclearGedi
+          _target_: src.pl_data.dataset.NonNuclearGedi
           train: False
-          path: "/home/drew/robo_ms_ai/data/nls_files_test.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
+          path: "/home/drew/robo_ms_ai/data/non_nls_files_test.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
     num_workers:
       train: 4
       val: 4
@@ -71,9 +71,10 @@ logging:
   lr_monitor:
     logging_interval: "step"
     log_momentum: False
+
 model:
   _target_: src.pl_modules.model.MyModel
-  name: resnet50_pretrained_to_last_block_frozen
+  name: resnet18_pretrained_to_last_block_frozen
   num_classes: 2  # Using 2 for captum visualization :-(
   final_nl: False
   final_nl_dim: -1
@@ -104,7 +105,7 @@ train:
 
   # training
   eval_only: False
-  ckpt: False  # load pretrained weights
+  ckpt: experiments/2022-03-18/11-14-50/experiments/2022-03-18/11-14-50/nuclear_gedi/2c1ql0k3/checkpoints/epoch=206-step=7451.ckpt  # load pretrained weights
   pl_trainer:
     fast_dev_run: False # Enable this for debug purposes
     gpus: 1
