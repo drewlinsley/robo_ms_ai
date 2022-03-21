@@ -1,5 +1,6 @@
 from typing import Any, Dict, List, Sequence, Tuple, Union
 
+import os
 import hydra
 import pytorch_lightning as pl
 import torchmetrics
@@ -237,6 +238,7 @@ class MyModel(pl.LightningModule):
 
         images = []
         images_feat_viz = []
+        viz_maps = []
 
         integrated_gradients = Occlusion(self.forward)
         # noise_tunnel = NoiseTunnel(integrated_gradients)
@@ -255,15 +257,16 @@ class MyModel(pl.LightningModule):
             #     nt_type='smoothgrad_sq',
             #     target=output_element["y_true"],
             #     internal_batch_size=50)
+            plottable_attr = np.transpose(attributions_ig_nt.squeeze(0).cpu().detach().numpy(), (1, 2, 0))
+            viz_maps.append(plottable_attr)
             vz = viz.visualize_image_attr(
-                np.transpose(attributions_ig_nt.squeeze(0).cpu().detach().numpy(), (1, 2, 0)),
+                plottable_attr,
                 np.transpose(output_element["image"].cpu().detach().numpy(), (1, 2, 0)),
                 method='blended_heat_map',
                 show_colorbar=True,
-                use_pyplot=True,
+                use_pyplot=False,  # Set to True to debug and see your maps in plt
                 sign='positive',
                 outlier_perc=1)
-            import pdb;pdb.set_trace()
             rendered_image = render_images(output_element["image"], autoshow=False)
             caption = f"y_pred: {output_element['logits'].argmax()}  [gt: {output_element['y_true']}]"
             images.append(
@@ -280,6 +283,9 @@ class MyModel(pl.LightningModule):
             plt.close(vz[0])
         self.logger.experiment.log({"Test Images": images}, step=self.global_step)
         self.logger.experiment.log({"Test Images Feature Viz": images_feat_viz}, step=self.global_step)
+
+        # Make directories then save data
+        np.save("attributions", viz_maps)
 
     def configure_optimizers(
         self,
