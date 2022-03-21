@@ -108,12 +108,12 @@ def run(cfg: DictConfig) -> None:
     # Instantiate the callbacks
     callbacks: List[Callback] = build_callbacks(cfg=cfg)
 
-    if cfg.eval_only:
-        if cfg.model.weights is not None:
-            print("Loading weights from ", cfg.model.weights)
+    if cfg.train.eval_only:
+        if cfg.train.weights is not None:
+            print("Loading weights from ", cfg.train.weights)
             model = weights_update(
                 model=model,
-                checkpoint=torch.load(cfg.model.weights))
+                checkpoint=torch.load(cfg.train.weights))
 
         trainer = pl.Trainer(
             logger=False,
