@@ -104,7 +104,7 @@ train:
   random_seed: 42
 
   # training
-  eval_only: False
+  eval_only: True
   ckpt: experiments/2022-03-18/11-14-52/experiments/2022-03-18/11-14-52/nuclear_gedi/wzz53lvw/checkpoints/epoch=273-step=39455.ckpt  # load pretrained weights
   pl_trainer:
     fast_dev_run: False # Enable this for debug purposes
