@@ -112,7 +112,7 @@ train:
     precision: 32
     max_steps: 200000
     # accumulate_grad_batches: 1
-    # num_sanity_val_steps: 2
+    num_sanity_val_steps: 0
     gradient_clip_val: 10000000.0  # 10.
 
   monitor_metric: 'val_loss'
