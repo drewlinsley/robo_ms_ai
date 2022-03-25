@@ -1,5 +1,6 @@
 from typing import Any, Dict, List, Sequence, Tuple, Union
 
+import sys
 import os
 import hydra
 import pytorch_lightning as pl
@@ -9,11 +10,12 @@ import torch.nn.functional as F
 import wandb
 from omegaconf import DictConfig
 from torch.optim import Optimizer
+from tqdm import tqdm
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-from captum.attr import IntegratedGradients, Occlusion
+from captum.attr import IntegratedGradients, Occlusion, GuidedGradCam
 from captum.attr import NoiseTunnel
 from captum.attr import visualization as viz
 
@@ -240,23 +242,28 @@ class MyModel(pl.LightningModule):
         images_feat_viz = []
         viz_maps = []
 
-        integrated_gradients = Occlusion(self.forward)
-        # noise_tunnel = NoiseTunnel(integrated_gradients)
-        for output_element in iterate_elements_in_batches(
+        integrated_gradients = IntegratedGradients(self.forward)
+        # integrated_gradients = Occlusion(self.forward)
+        # integrated_gradients = GuidedGradCam(self.forward, self.net.layer4[0].conv1)
+        noise_tunnel = NoiseTunnel(integrated_gradients)
+        for output_element in tqdm(iterate_elements_in_batches(
             outputs, batch_size, self.cfg.logging.n_elements_to_log
-        ):
+        ), desc="Running visualizations", total=len(outputs)):
 
             #import pdb; pdb.set_trace()
-            attributions_ig_nt = integrated_gradients.attribute(
-                output_element["image"].unsqueeze(0),
-                target=output_element["y_true"],
-                sliding_window_shapes=(1, 3, 3))
-            # attributions_ig_nt = noise_tunnel.attribute(
+            # attributions_ig_nt = integrated_gradients.attribute(
             #     output_element["image"].unsqueeze(0),
-            #     nt_samples=50,
-            #     nt_type='smoothgrad_sq',
+            #     target=output_element["y_true"])
+            # attributions_ig_nt = integrated_gradients.attribute(
+            #     output_element["image"].unsqueeze(0),
             #     target=output_element["y_true"],
-            #     internal_batch_size=50)
+            #     sliding_window_shapes=(1, 3, 3))
+            attributions_ig_nt = noise_tunnel.attribute(
+                output_element["image"].unsqueeze(0),
+                nt_samples=50,
+                nt_type='smoothgrad_sq',
+                target=output_element["y_true"],
+                internal_batch_size=50)
             plottable_attr = np.transpose(attributions_ig_nt.squeeze(0).cpu().detach().numpy(), (1, 2, 0))
             viz_maps.append(plottable_attr)
             vz = viz.visualize_image_attr(
@@ -281,11 +288,11 @@ class MyModel(pl.LightningModule):
                     caption=caption,
                 ))
             plt.close(vz[0])
-        self.logger.experiment.log({"Test Images": images}, step=self.global_step)
-        self.logger.experiment.log({"Test Images Feature Viz": images_feat_viz}, step=self.global_step)
+        # self.logger.experiment.log({"Test Images": images}, step=self.global_step)
+        # self.logger.experiment.log({"Test Images Feature Viz": images_feat_viz}, step=self.global_step)
 
         # Make directories then save data
-        np.save("attributions", viz_maps)
+        np.savez("attributions", viz=viz_maps, images=images)
 
     def configure_optimizers(
         self,
