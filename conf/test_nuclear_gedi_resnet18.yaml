@@ -53,7 +53,7 @@ hydra:
   #   batch_size: auto
 
 logging:
-  n_elements_to_log: 32
+  n_elements_to_log: 10  # 32
   normalize_visualization: True
 
   # log frequency

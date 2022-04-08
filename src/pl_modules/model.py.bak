@@ -255,9 +255,11 @@ class MyModel(pl.LightningModule):
         viz_maps = []
         gt = []
         pred = []
-        integrated_gradients = GuidedGradCam(self, self.net.layer2[0].conv1)
-        # (Pdb) GuidedGradCam(self, self.net.layer4)
-
+        # integrated_gradients = IntegratedGradients(self.forward)
+        integrated_gradients = Occlusion(self.forward)
+        # integrated_gradients = GuidedGradCam(self.forward, self.net.layer4[0].conv1)
+        # integrated_gradients = Saliency(self.forward)
+        noise_tunnel = NoiseTunnel(integrated_gradients)
         # outputs = [x.pop("filename") for x in outputs]
         # for output_element in tqdm(iterate_elements_in_batches(
         #     outputs, batch_size, self.cfg.logging.n_elements_to_log
@@ -273,18 +275,24 @@ class MyModel(pl.LightningModule):
                 data.append({"image": im, "y_true": y, "logits": logit})
 
             for output_element in tqdm(data, desc="Running visualizations", total=len(outputs)):
+                print(count, self.cfg.logging.n_elements_to_log)
                 if count > self.cfg.logging.n_elements_to_log:
                     break
                 #import pdb; pdb.set_trace()
-                attributions_ig_nt = integrated_gradients.attribute(
-                    output_element["image"].unsqueeze(0),
-                    target=output_element["y_true"])
+                # attributions_ig_nt = integrated_gradients.attribute(
+                #     output_element["image"].unsqueeze(0),
+                #     target=output_element["y_true"])
                 # attributions_ig_nt = noise_tunnel.attribute(
                 #     output_element["image"].unsqueeze(0),
                 #     nt_samples=50,
                 #     nt_type='smoothgrad_sq',
                 #     target=0)  # ,  # output_element["y_true"],
                 #     # internal_batch_size=50)
+                attributions_ig_nt = integrated_gradients.attribute(
+                    output_element["image"].unsqueeze(0),
+                    target=output_element["y_true"],  # 0
+                    strides=(1, 2, 2),
+                   sliding_window_shapes=(1, 2, 2))
                 plottable_attr_dead = np.transpose(attributions_ig_nt.squeeze(0).cpu().detach().numpy(), (1, 2, 0))
                 # attributions_ig_nt = noise_tunnel.attribute(
                 #     output_element["image"].unsqueeze(0),

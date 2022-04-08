@@ -11,31 +11,31 @@ data:
   datamodule:
     _target_: src.pl_data.datamodule.MyDataModule
     val_proportion: 0.15
-    dataset_name: NonNuclearGedi  # Label for experiment
-    transform_recipe: NuclearGedi
+    dataset_name: NuclearGedi  # Label for experiment
+    transform_recipe: ${data.datamodule.dataset_name}
     datasets:
-      NonNuclearGedi:
+      NuclearGedi:
         train:
-          _target_: src.pl_data.dataset.NonNuclearGedi
+          _target_: src.pl_data.dataset.NuclearGedi
           train: True
-          path: "/home/drew/robo_ms_ai/data/non_nls_files_train.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
+          path: "/home/drew/robo_ms_ai/data/gedi2_files_train.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
         val:
-          _target_: src.pl_data.dataset.NonNuclearGedi
+          _target_: src.pl_data.dataset.NuclearGedi
           train: False
-          path: "/home/drew/robo_ms_ai/data/non_nls_files_val.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
+          path: "/home/drew/robo_ms_ai/data/gedi2_files_val.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
         test:
-          _target_: src.pl_data.dataset.NonNuclearGedi
+          _target_: src.pl_data.dataset.NuclearGedi
           train: False
-          path: "/home/drew/robo_ms_ai/data/non_nls_files_test.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
+          path: "/home/drew/robo_ms_ai/data/gedi2_files_test.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
     num_workers:
       train: 4
       val: 4
       test: 4
 
     batch_size:
-      train: 128  # 240  # 128
-      val: 128 # 240  # 128
-      test: 128  # 128
+      train: 32  # 240  # 128
+      val: 32 # 240  # 128
+      test: 32  # 128
 hydra:
   run:
     dir: ./experiments/${now:%Y-%m-%d}/${now:%H-%M-%S}
@@ -53,7 +53,7 @@ hydra:
   #   batch_size: auto
 
 logging:
-  n_elements_to_log: 10  # 32
+  n_elements_to_log: 32
   normalize_visualization: True
 
   # log frequency
@@ -71,7 +71,6 @@ logging:
   lr_monitor:
     logging_interval: "step"
     log_momentum: False
-
 model:
   _target_: src.pl_modules.model.MyModel
   name: resnet18_pretrained_to_last_block_frozen
@@ -104,15 +103,15 @@ train:
   random_seed: 42
 
   # training
-  eval_only: True
-  ckpt: /home/drew/robo_ms_ai/experiments/2022-03-18/11-14-50/experiments/2022-03-18/11-14-50/nuclear_gedi/2c1ql0k3/checkpoints/epoch=205-step=7415.ckpt  # load pretrained weights
+  eval_only: False
+  ckpt: False  # load pretrained weights
   pl_trainer:
     fast_dev_run: False # Enable this for debug purposes
     gpus: 1
     precision: 32
     max_steps: 200000
     # accumulate_grad_batches: 1
-    num_sanity_val_steps: 0
+    # num_sanity_val_steps: 2
     gradient_clip_val: 10000000.0  # 10.
 
   monitor_metric: 'val_loss'

@@ -11,31 +11,31 @@ data:
   datamodule:
     _target_: src.pl_data.datamodule.MyDataModule
     val_proportion: 0.15
-    dataset_name: NonNuclearGedi  # Label for experiment
-    transform_recipe: NuclearGedi
+    dataset_name: NuclearGedi  # Label for experiment
+    transform_recipe: ${data.datamodule.dataset_name}
     datasets:
-      NonNuclearGedi:
+      NuclearGedi:
         train:
-          _target_: src.pl_data.dataset.NonNuclearGedi
+          _target_: src.pl_data.dataset.NuclearGedi
           train: True
-          path: "/home/drew/robo_ms_ai/data/non_nls_files_train.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
+          path: "/home/drew/robo_ms_ai/data/nls_viz_files_train.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
         val:
-          _target_: src.pl_data.dataset.NonNuclearGedi
+          _target_: src.pl_data.dataset.NuclearGedi
           train: False
-          path: "/home/drew/robo_ms_ai/data/non_nls_files_val.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
+          path: "/home/drew/robo_ms_ai/data/nls_viz_files_val.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
         test:
-          _target_: src.pl_data.dataset.NonNuclearGedi
+          _target_: src.pl_data.dataset.NuclearGedi
           train: False
-          path: "/home/drew/robo_ms_ai/data/non_nls_files_test.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
+          path: "/home/drew/robo_ms_ai/data/nls_viz_files_test.npz"  # "/home/drew/dropbox_symlink/GEDInls/"
     num_workers:
       train: 4
       val: 4
       test: 4
 
     batch_size:
-      train: 128  # 240  # 128
-      val: 128 # 240  # 128
-      test: 128  # 128
+      train: 6  # 240  # 128
+      val: 6 # 240  # 128
+      test: 6  # 128
 hydra:
   run:
     dir: ./experiments/${now:%Y-%m-%d}/${now:%H-%M-%S}
@@ -105,7 +105,7 @@ train:
 
   # training
   eval_only: True
-  ckpt: /home/drew/robo_ms_ai/experiments/2022-03-18/11-14-50/experiments/2022-03-18/11-14-50/nuclear_gedi/2c1ql0k3/checkpoints/epoch=205-step=7415.ckpt  # load pretrained weights
+  ckpt: /home/drew/robo_ms_ai/experiments/2022-03-18/11-14-52/experiments/2022-03-18/11-14-52/nuclear_gedi/wzz53lvw/checkpoints/epoch=273-step=39455.ckpt  # load pretrained weights
   pl_trainer:
     fast_dev_run: False # Enable this for debug purposes
     gpus: 1
